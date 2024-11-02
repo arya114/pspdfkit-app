@@ -1,4 +1,3 @@
-```markdown
 # E-SIGNATURE - Proyek Tanda Tangan Digital PDF
 
 E-SIGNATURE adalah aplikasi web yang digunakan pengguna untuk menambahkan tanda tangan digital pada dokumen PDF secara langsung. Aplikasi ini dirancang untuk memberikan pengalaman pengguna yang mudah dan efisien dengan fitur upload file menggunakan AJAX, notifikasi dengan SweetAlert, preview file sebelum upload, serta indikator loading untuk memudahkan interaksi pengguna.
