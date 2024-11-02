@@ -16,29 +16,37 @@ class PdfController extends Controller
 
     // Mengelola proses upload file PDF.
     public function upload(Request $request)
-    {
-        // Validasi file upload
-        $request->validate([
-            'pdf' => 'required|file|mimes:pdf|max:25600',
+{
+    // Validasi file yang diunggah
+    $request->validate([
+        'pdf' => 'required|file|mimes:pdf|max:25600',
+    ]);
+
+    // Ambil nama asli file
+    $fileName = $request->file('pdf')->getClientOriginalName();
+
+    // Simpan file ke direktori 'uploads' dalam penyimpanan publik
+    $path = $request->pdf->storeAs('uploads', $fileName, 'public');
+
+    // Simpan informasi file ke database
+    $file = PdfFile::create([
+        'filename' => $fileName,
+        'path' => $path,
+    ]);
+
+    // Kembalikan respons JSON untuk penanganan AJAX
+    if ($file) {
+        return response()->json([
+            'success' => true,
+            'message' => 'File berhasil diunggah.',
+            'fileId' => $file->id,
         ]);
-
-        // Ambil nama asli file
-        $fileName = $request->file('pdf')->getClientOriginalName();
-        // Simpan file ke direktori 'uploads' dalam penyimpanan publik
-        $path = $request->pdf->storeAs('uploads', $fileName, 'public');
-
-        // Simpan informasi file ke database
-        $file = PdfFile::create([
-            'filename' => $fileName,
-            'path' => $path,
-        ]);
-
-        // Redirect berdasarkan hasil upload
-        if ($file) {
-            return redirect()->route('pdf.signature', ['id' => $file->id])
-                ->with('success', 'File berhasil diunggah. Anda sekarang dapat menandatangani file tersebut.');
-        } else {
-            return back()->with('error', 'File gagal diunggah.');
-        }
+    } else {
+        return response()->json([
+            'success' => false,
+            'message' => 'Gagal mengunggah file.',
+        ], 500);
     }
+}
+
 }
